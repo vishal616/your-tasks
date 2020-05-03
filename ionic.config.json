@@ -1,0 +1,7 @@
+{
+  "name": "your-tasks",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

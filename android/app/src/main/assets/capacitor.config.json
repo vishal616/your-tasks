@@ -1,0 +1,13 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "your-tasks",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {},
+  "plugins": {
+    "WebView": {
+      "scrollEnabled": false
+    }
+  }
+}
