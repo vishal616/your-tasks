@@ -1,108 +1,16 @@
-.app{
-    background-color: #3e3e3e;
-}
-
-.header-class{
-    --background: black;
-    --color: white;
-    /*display: flex;*/
-    /*padding: 0.625rem;*/
-    /*justify-content: center;*/
-    /*align-content: center;*/
-    /*align-items: center;*/
-    /*box-shadow: 0 0.5rem 0.375rem -0.375rem black;*/
-}
-/*.ion-margin-top{*/
-/*    margin-top: -10px;*/
-/*}*/
-
-.content{
-    background-color: #3e3e3e;
-}
-.item-background{
-    --background: #3e3e3e;
-    --color:red;
-}
-.item-todo{
-    padding: 10px;
-    padding-left: 5px;
-    width: inherit;
-    background-color:#3e3e3e ;
-    color:white;
-    height: fit-content;
-    min-height: 2.5rem
-    /*border-style: solid;*/
-    /*border-bottom-color: black;*/
-    /*border-top-color: black;*/
-    /*border-right-color: #3e3e3e;*/
-    /*border-left-color: #3e3e3e;*/
-    /*border-width: thin;*/
-}
-
-.swipe-right{
-    background-color: red;
-    width:inherit;
-    height: inherit;
-}
-
-.delete-icon{
-    padding-top: 2.5px;
-    background-color: red;
-    height: inherit;
-    color:white;
-    padding-left: 60px;
-}
-
-.item-completed{
-    color:white;
-    margin-left: 5px;
-    text-decoration: line-through;
-}
-IonIcon{
-    font-size:20px;
-    color:red;
-}
-
-.swipe-container{
-    background-color: #3e3e3e;
+*{
+    font-family: cursive !important;
 }
 
 .check-box{
     --border-radius:10px !important;
-    --border-color:white !important;
+    --border-color:black !important;
     --border-style:solid !important;
     --border-width:1px !important;
     --background:#3e3e3e;
     --background-checked:#3e3e3e;
     --border-color-checked:#3e3e3e;
     --checkmark-color:#3171e0;
-    height: fit-content;
-    transition:border-radius 0.3s ease-in-out;
-}
-
-.check-box:hover{
-    border-radius:0px;
-}
-
-.floating-button{
-    margin-bottom: 50px;
-}
-
-.line{
-    margin-top: -0.438rem;
-    background-color: white;
-    height: 0.063rem;
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.bottom-border{
-    /*margin-top: -0.438rem;*/
-    background-color: #292929;;
-    height: 0.063rem;
-    width: inherit;
-    margin-left: 40px
 }
 
 .input-modal{
@@ -110,14 +18,24 @@ IonIcon{
     --height:10rem;
     --border-radius:5px;
 }
-.footer{
-    --background: black;
-    --color: white;
-    background-color: black;
+
+.fab-bottom-margin{
+    margin-bottom: 70px;
 }
-.ion-text-center{
-    font-family: cursive;
-    text-align: center;
+
+.fab-color{
+    --background:#3171e0
+}
+
+.toolbar-title {
+    font-size:16px;
+    text-overflow: inherit;
+    white-space: normal;
+}
+
+.p-headings{
+    font-size:20px !important;
+    color:black;
 }
 
 .input-value{
@@ -125,22 +43,31 @@ IonIcon{
     --padding-top:10px;
     --padding-start:25px;
     --padding-end:25px;
+    --color:#b3aeae;
     caret-color: #3171e0;
 
 }
+
+.save-button-position{
+    display: flex;
+    justify-content: flex-end;
+    margin:5px 20px 10px 0px ;
+}
+
 .save-button{
     background:#3171e0;
     width: fit-content;
     padding:8px;
     border-radius: 5px;
-    float:right;
 }
-
+.divider{
+    margin-top: 5px;
+}
 .flex-box{
     display: flex;
     flex-direction: column;
 }
 
-.font-size{
-    font-size:18px;
+.toolbar-height{
+    --min-height: 45px;
 }
