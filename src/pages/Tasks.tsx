@@ -6,12 +6,21 @@ import {
 } from '@ionic/react';
 import React, {useState, useEffect, Component} from 'react';
 import './Tasks.css';
-import {add, checkbox, checkmarkCircleOutline, options, save, text, trash} from "ionicons/icons";
+import {
+    add,
+    caretDownOutline,
+    caretUpOutline,
+    checkbox,
+    checkmarkCircleOutline,
+    options,
+    save,
+    text,
+    trash
+} from "ionicons/icons";
 import {Plugins, KeyboardInfo} from '@capacitor/core';
 import {LongPressModule} from "ionic-long-press";
-import {SwipeableList, SwipeableListItem} from '@sandstreamdev/react-swipeable-list';
 import '@sandstreamdev/react-swipeable-list/dist/styles.css';
-
+import Collapsible from 'react-collapsible';
 const Hammer = require("react-hammerjs").default;
 
 const {Keyboard} = Plugins;
@@ -34,6 +43,8 @@ export interface IState {
     showAlert: any;
     deleteTasK: any;
     deleteTypeList: any;
+    toDoCollapse:any;
+    completedCollapse:any;
 }
 
 class Tasks extends React.Component<any, IState> {
@@ -41,7 +52,7 @@ class Tasks extends React.Component<any, IState> {
         touchAction: 'compute',
         recognizers: {
             tap: {
-                time: 600,
+                time: 500,
                 threshold: 100
             }
         }
@@ -50,6 +61,8 @@ class Tasks extends React.Component<any, IState> {
     constructor(props: any) {
         super(props);
         this.state = {
+            toDoCollapse:true,
+            completedCollapse:false,
             showModal: false,
             showButton: false,
             showUpdateButton: false,
@@ -73,7 +86,7 @@ class Tasks extends React.Component<any, IState> {
         const self = this;
         let todoList: any = [];
         let completedList: any = [];
-
+        Keyboard.setScroll({isDisabled:true})
         async function getData() {
             todoList = await Storage.get({key: 'ToDoList'});
             completedList = await Storage.get({key: 'CompletedList'});
@@ -82,11 +95,9 @@ class Tasks extends React.Component<any, IState> {
 
             if (todoList) {
                 self.setState({toDoList: todoList});
-                console.log('get to do state', self.state.toDoList);
             }
             if (completedList) {
                 self.setState({completedList: completedList})
-                console.log('get to do state', self.state.completedList);
             }
 
         }
@@ -129,7 +140,7 @@ class Tasks extends React.Component<any, IState> {
             this.setState({toDoList: list}, () => {
                 this.setItemToSaveInDb();
             })
-            this.setState({showModal: false, showButton: false});
+            this.setState({showModal: false, showButton: false,toDoCollapse:true});
         } else {
             this.setState({placeholder: "Please Enter Some Text"})
         }
@@ -163,7 +174,7 @@ class Tasks extends React.Component<any, IState> {
             toDolist.splice(index, 1);
             this.setState({toDoList: toDolist})
             this.sortList(completedItemsList);
-            this.setState({completedList: completedItemsList}, () => {
+            this.setState({completedList: completedItemsList,completedCollapse:true}, () => {
                 this.setItemToSaveInDb();
             });
         }
@@ -184,7 +195,7 @@ class Tasks extends React.Component<any, IState> {
             completedItemsList.splice(index, 1);
             this.setState({completedList: completedItemsList})
             this.sortList(toDolist);
-            this.setState({toDoList: toDolist}, () => {
+            this.setState({toDoList: toDolist,toDoCollapse:true}, () => {
                 this.setItemToSaveInDb();
             });
         }
@@ -231,7 +242,7 @@ class Tasks extends React.Component<any, IState> {
                     task.name = this.state.newTask.name;
                 }
             });
-            this.setState({showModal: false})
+            this.setState({showModal: false, toDoCollapse:true})
             this.setItemToSaveInDb();
         } else {
             this.setState({placeholder: "Please Enter Some Text"})
@@ -239,6 +250,7 @@ class Tasks extends React.Component<any, IState> {
     }
 
     public updateToDoTask = (task: any, listType: any) => {
+        Keyboard.show();
         this.setState({
             newTask: task,
             showModal: true,
@@ -249,7 +261,37 @@ class Tasks extends React.Component<any, IState> {
 
     }
 
+    public changeIconStateToDown=()=>{
+        const element:any = document.getElementById('to-do-icon');
+        element.classList.remove('icon-animation-down-2');
+        element.classList.add('icon-animation-up-2');
+    }
+    public changeIconStateToDownForCompleted=()=>{
+        const element:any = document.getElementById('completed-icon');
+        element.classList.remove('icon-animation-up');
+        element.classList.add('icon-animation-down');
+    }
+
+    public changeIconStateToUp=()=>{
+        const element:any = document.getElementById('to-do-icon');
+        element.classList.remove('icon-animation-up-2');
+        element.classList.add('icon-animation-down');
+    }
+    public changeIconStateToUpForCompleted=()=>{
+        const element:any = document.getElementById('completed-icon');
+        element.classList.remove('icon-animation-down');
+        element.classList.add('icon-animation-up');
+    }
+
     render() {
+        const Trigger = () => <div className="list-title">
+            <h3>To Do</h3>
+            <IonIcon id='to-do-icon' icon={caretUpOutline}></IonIcon>
+        </div>;
+        const CompleteTrigger = () => <div className="list-title">
+            <h3>Completed</h3>
+            <IonIcon id='completed-icon' icon={caretDownOutline}></IonIcon>
+        </div>;
         return (
             <IonPage>
                 <IonHeader>
@@ -258,18 +300,19 @@ class Tasks extends React.Component<any, IState> {
                     </IonToolbar>
                 </IonHeader>
 
-                <IonItemDivider className='divider ion-margin-start'>
-                    <p className='p-headings'>To Do</p>
-                </IonItemDivider>
-                <IonContent>
+                <IonContent className="ion-margin-top">
+                    <Collapsible onOpening={this.changeIconStateToUp}
+                                  onClosing={this.changeIconStateToDown}
+                        trigger={<Trigger/>} triggerStyle={{fontSize:"25px", marginLeft:"16px"}}
+                                 open={this.state.toDoCollapse}>
                     <IonList>
                         {this.state.toDoList.map((task: any) => {
                             return (
-                                <Hammer onPressUp={() => {
+                                <Hammer  onPressUp={() => {
                                     this.setState({showAlert: true, deleteTasK: task, deleteTypeList: 'ToDo'})
                                 }} options={options}>
                                     <div>
-                                        <IonItem button onClick={() => {
+                                        <IonItem  button onClick={() => {
                                             this.updateToDoTask(task, 'ToDo')
                                         }} key={task.id + Math.random()}>
                                             <IonCheckbox onIonChange={() => {
@@ -285,13 +328,12 @@ class Tasks extends React.Component<any, IState> {
                         })
                         }
                     </IonList>
-                </IonContent>
+                    </Collapsible>
 
-                <IonItemDivider className='divider ion-margin-start'>
-                    <p className='p-headings'>Completed</p>
-                </IonItemDivider>
-
-                <IonContent>
+                    <Collapsible onOpening={this.changeIconStateToUpForCompleted}
+                                 onClosing={this.changeIconStateToDownForCompleted}
+                                 trigger={<CompleteTrigger/>} triggerStyle={{fontSize:"25px", marginLeft:"16px"}}
+                                 open={this.state.completedCollapse}>
                     <IonList>
                         {this.state.completedList.map((task: any) => {
                             return (
@@ -313,6 +355,7 @@ class Tasks extends React.Component<any, IState> {
                         })
                         }
                     </IonList>
+                    </Collapsible>
                 </IonContent>
                 <IonModal onDidDismiss={() => {
                     this.setState({showModal: false, newTask: {}, placeholder: "New Task", formMode: 'create'})
@@ -332,14 +375,15 @@ class Tasks extends React.Component<any, IState> {
                             </div>
                         </div>
                     </IonContent>
-                    <span className='save-button-position'>
+                    <div className='save-button-position'>
                    <button className="save-button"
                            onClick={this.state.formMode === 'create' ? this.saveTask : this.updateTask}>Save</button>
-                   </span>
+                   </div>
                 </IonModal>
                 <IonFab className="fab-bottom-margin" vertical="bottom" horizontal="end" slot="fixed">
                     <IonFabButton className='fab-color' onClick={() => {
-                        this.setState({showModal: true})
+                        this.setState({showModal: true});
+                        Keyboard.show()
                     }}>
                         <IonIcon icon={add}></IonIcon>
                     </IonFabButton>
@@ -356,7 +400,7 @@ class Tasks extends React.Component<any, IState> {
                     isOpen={this.state.showAlert}
                     onDidDismiss={() => this.setState({showAlert: false})}
                     header={'Delete'}
-                    message={'Are You Sure ?'}
+                    message={'<h3>Are You Sure ?</h3>'}
                     buttons={[
                         {
                             text: 'Cancel',
