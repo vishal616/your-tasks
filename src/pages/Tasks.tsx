@@ -45,6 +45,9 @@ export interface IState {
     deleteTypeList: any;
     toDoCollapse:any;
     completedCollapse:any;
+    undoAlert:any;
+    undoMessage:any;
+    undoObject:any;
 }
 
 class Tasks extends React.Component<any, IState> {
@@ -65,6 +68,7 @@ class Tasks extends React.Component<any, IState> {
             completedCollapse:false,
             showModal: false,
             showButton: false,
+            undoAlert:false,
             showUpdateButton: false,
             updateTask: {},
             showUpdateModal: false,
@@ -78,7 +82,9 @@ class Tasks extends React.Component<any, IState> {
             completedList: [],
             placeholder: 'New Task',
             formMode: 'create',
-            showAlert: false
+            showAlert: false,
+            undoMessage:null,
+            undoObject:{}
         }
     }
 
@@ -174,9 +180,12 @@ class Tasks extends React.Component<any, IState> {
             toDolist.splice(index, 1);
             this.setState({toDoList: toDolist})
             this.sortList(completedItemsList);
-            this.setState({completedList: completedItemsList,completedCollapse:true}, () => {
+            this.setState({completedList: completedItemsList,completedCollapse:true,undoAlert:true,
+            undoMessage:'1 task moved to completed', undoObject:obj
+            }, () => {
                 this.setItemToSaveInDb();
             });
+            this.showUndoForSomeTime();
         }
     })
     public setTaskToToDo = ((taskObject: any) => {
@@ -195,9 +204,12 @@ class Tasks extends React.Component<any, IState> {
             completedItemsList.splice(index, 1);
             this.setState({completedList: completedItemsList})
             this.sortList(toDolist);
-            this.setState({toDoList: toDolist,toDoCollapse:true}, () => {
+            this.setState({toDoList: toDolist,toDoCollapse:true,undoAlert:true,
+                undoMessage:'1 task moved to to do', undoObject:obj
+            }, () => {
                 this.setItemToSaveInDb();
             });
+            this.showUndoForSomeTime();
         }
     })
 
@@ -211,7 +223,7 @@ class Tasks extends React.Component<any, IState> {
         if (index > -1) {
             let toDolist: any = [...this.state.toDoList];
             toDolist.splice(index, 1);
-            this.setState({toDoList: toDolist}, () => {
+            this.setState({toDoList: toDolist, undoAlert:true}, () => {
                 this.setItemToSaveInDb()
             });
         }
@@ -227,7 +239,8 @@ class Tasks extends React.Component<any, IState> {
         if (index > -1) {
             let completedItemsList: any = [...this.state.completedList];
             completedItemsList.splice(index, 1);
-            this.setState({completedList: completedItemsList}, () => {
+            this.setState({completedList: completedItemsList, undoAlert:true,
+            }, () => {
                 this.setItemToSaveInDb()
             });
         }
@@ -281,6 +294,24 @@ class Tasks extends React.Component<any, IState> {
         const element:any = document.getElementById('completed-icon');
         element.classList.remove('icon-animation-down');
         element.classList.add('icon-animation-up');
+    }
+    public showUndoForSomeTime=()=>{
+        const element:any = document.getElementById('undo');
+        setTimeout(()=>{element.style.display='none'},5000);
+        element.removeAttribute("style");
+    }
+
+    public performUndo=()=>{
+        const undoType:any=this.state.undoMessage;
+        const element:any = document.getElementById('undo');
+        if(undoType === '1 task moved to completed'){
+            this.setTaskToToDo(this.state.undoObject);
+            element.style.display='none';
+        }
+        else if (undoType === '1 task moved to to do'){
+            this.setTaskToComplete(this.state.undoObject);
+            element.style.display='none';
+        }
     }
 
     render() {
@@ -411,10 +442,17 @@ class Tasks extends React.Component<any, IState> {
                                 this.state.deleteTypeList === 'ToDo' ?
                                     this.deleteItemFromToDoList(this.state.deleteTasK) :
                                     this.deleteItemFromCompletedList(this.state.deleteTasK);
+                                this.setState({undoAlert:true})
                             }
                         }
                     ]}
                 />
+                <div id='undo' style={this.state.undoAlert? {display:'block'}:{display:'none'}}>
+                    <div className='undo-alert'>
+                        <div className="undo-message">{this.state.undoMessage}</div>
+                        <button className='undo-button' onClick={this.performUndo}>Undo</button>
+                    </div>
+                </div>
             </IonPage>
 
         )

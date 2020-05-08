@@ -18,7 +18,6 @@
     --ion-background-color:#3e3e3e;
     --height:10rem;
     --border-radius:5px;
-     top:50%;
 }
 
 .fab-bottom-margin{
@@ -134,4 +133,27 @@
      -webkit-transform:rotate(-180deg);
  }
 
+.undo-alert{
+    background-color:black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 40px;
+    margin-right: 40px;
+    color:white;
+    border-radius: 5px;
+    margin-bottom: 45px;
+}
+
+.undo-button{
+    background-color: black;
+    color:#3171e0;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.undo-message{
+    margin-left: 10px;
+    color:white;
+}
 
