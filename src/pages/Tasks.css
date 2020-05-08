@@ -156,4 +156,19 @@
     margin-left: 10px;
     color:white;
 }
+.line{
+    background-color: black;
+    height: 1px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.undo-alert-fade{
+    animation: fadeDiv 2s ease-in-out forwards;
+}
+
+@keyframes fadeDiv {
+    from {visibility: visible;  opacity: 1;}
+    to {visibility: hidden;  opacity: 0;}
+}
 

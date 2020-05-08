@@ -320,7 +320,7 @@ class Tasks extends React.Component<any, IState> {
             <IonIcon id='to-do-icon' icon={caretUpOutline}></IonIcon>
         </div>;
         const CompleteTrigger = () => <div className="list-title">
-            <h3>Completed</h3>
+            <h3>Completed({this.state.completedList.length})</h3>
             <IonIcon id='completed-icon' icon={caretDownOutline}></IonIcon>
         </div>;
         return (
@@ -336,6 +336,7 @@ class Tasks extends React.Component<any, IState> {
                                   onClosing={this.changeIconStateToDown}
                         trigger={<Trigger/>} triggerStyle={{fontSize:"25px", marginLeft:"16px"}}
                                  open={this.state.toDoCollapse}>
+                        <div className='line'></div>
                     <IonList>
                         {this.state.toDoList.map((task: any) => {
                             return (
@@ -365,6 +366,7 @@ class Tasks extends React.Component<any, IState> {
                                  onClosing={this.changeIconStateToDownForCompleted}
                                  trigger={<CompleteTrigger/>} triggerStyle={{fontSize:"25px", marginLeft:"16px"}}
                                  open={this.state.completedCollapse}>
+                        <div className='line'></div>
                     <IonList>
                         {this.state.completedList.map((task: any) => {
                             return (
@@ -447,12 +449,11 @@ class Tasks extends React.Component<any, IState> {
                         }
                     ]}
                 />
-                <div id='undo' style={this.state.undoAlert? {display:'block'}:{display:'none'}}>
-                    <div className='undo-alert'>
+                    <div id='undo' className='undo-alert' style={this.state.undoAlert? {display:'block'}:{display:'none'}}>
                         <div className="undo-message">{this.state.undoMessage}</div>
                         <button className='undo-button' onClick={this.performUndo}>Undo</button>
+
                     </div>
-                </div>
             </IonPage>
 
         )
