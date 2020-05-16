@@ -188,7 +188,8 @@ class Tasks extends React.Component<any, IState> {
             }, () => {
                 this.setItemToSaveInDb();
             });
-            this.showUndoForSomeTime();
+
+            // this.showUndoForSomeTime();
         }
     })
     public setTaskToToDo = ((taskObject: any) => {
@@ -212,7 +213,7 @@ class Tasks extends React.Component<any, IState> {
             }, () => {
                 this.setItemToSaveInDb();
             });
-            this.showUndoForSomeTime();
+            // this.showUndoForSomeTime();
         }
     })
 
@@ -297,24 +298,24 @@ class Tasks extends React.Component<any, IState> {
         element.classList.remove('icon-animation-down');
         element.classList.add('icon-animation-up');
     }
-    public showUndoForSomeTime=()=>{
-        const element:any = document.getElementById('undo');
-        setTimeout(()=>{element.style.display='none'},5000);
-        element.removeAttribute("style");
-    }
+    // public showUndoForSomeTime=()=>{
+    //     const element:any = document.getElementById('undo');
+    //     setTimeout(()=>{element.style.display='none'},5000);
+    //     element.removeAttribute("style");
+    // }
 
-    public performUndo=()=>{
-        const undoType:any=this.state.undoMessage;
-        const element:any = document.getElementById('undo');
-        if(undoType === '1 task moved to completed'){
-            this.setTaskToToDo(this.state.undoObject);
-            element.style.display='none';
-        }
-        else if (undoType === '1 task moved to to do'){
-            this.setTaskToComplete(this.state.undoObject);
-            element.style.display='none';
-        }
-    }
+    // public performUndo=()=>{
+    //     const undoType:any=this.state.undoMessage;
+    //     const element:any = document.getElementById('undo');
+    //     if(undoType === '1 task moved to completed'){
+    //         this.setTaskToToDo(this.state.undoObject);
+    //         element.style.display='none';
+    //     }
+    //     else if (undoType === '1 task moved to to do'){
+    //         this.setTaskToComplete(this.state.undoObject);
+    //         element.style.display='none';
+    //     }
+    // }
 
     render() {
         const Trigger = () => <div className="list-title">
@@ -467,11 +468,11 @@ class Tasks extends React.Component<any, IState> {
                         }
                     ]}
                 />
-                    <div id='undo' className='undo-alert' style={this.state.undoAlert? {display:'block'}:{display:'none'}}>
-                        <div className="undo-message">{this.state.undoMessage}</div>
-                        <button className='undo-button' onClick={this.performUndo}>Undo</button>
+                    {/*<div id='undo' className='undo-alert' style={this.state.undoAlert? {display:'block'}:{display:'none'}}>*/}
+                    {/*    <div className="undo-message">{this.state.undoMessage}</div>*/}
+                    {/*    <button className='undo-button' onClick={this.performUndo}>Undo</button>*/}
 
-                    </div>
+                    {/*</div>*/}
             </IonPage>
 
         )
