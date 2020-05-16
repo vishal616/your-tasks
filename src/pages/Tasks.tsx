@@ -339,8 +339,8 @@ class Tasks extends React.Component<any, IState> {
                         trigger={<Trigger/>} triggerStyle={{fontSize:"25px", marginLeft:"16px"}}
                                  open={this.state.toDoCollapse}>
                         <div className='line'></div>
+                        {this.state.toDoList.length?
                     <IonList>
-
                         {this.state.toDoList.map((task: any) => {
                             return (
                                 <Hammer onPressUp={() => {
@@ -367,6 +367,12 @@ class Tasks extends React.Component<any, IState> {
                         })
                         }
                     </IonList>
+                            :
+                            <div className='empty'>
+                                <h2>A fresh Start</h2>
+                                <h5>Anything to add ?</h5>
+                            </div>
+                        }
                     </Collapsible>
 
                     <Collapsible onOpening={this.changeIconStateToUpForCompleted}
