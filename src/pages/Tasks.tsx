@@ -18,9 +18,10 @@ import {
     trash
 } from "ionicons/icons";
 import {Plugins,HapticsImpactStyle} from '@capacitor/core';
-import {LongPressModule} from "ionic-long-press";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import '@sandstreamdev/react-swipeable-list/dist/styles.css';
 import Collapsible from 'react-collapsible';
+import {faCheck} from "@fortawesome/free-solid-svg-icons";
 const Hammer = require("react-hammerjs").default;
 
 const {Keyboard} = Plugins;
@@ -339,6 +340,7 @@ class Tasks extends React.Component<any, IState> {
                                  open={this.state.toDoCollapse}>
                         <div className='line'></div>
                     <IonList>
+
                         {this.state.toDoList.map((task: any) => {
                             return (
                                 <Hammer onPressUp={() => {
@@ -349,9 +351,12 @@ class Tasks extends React.Component<any, IState> {
                                         <IonItem  button onClick={() => {
                                             this.updateToDoTask(task, 'ToDo')
                                         }} key={task.id + Math.random()}>
-                                            <IonCheckbox onIonChange={() => {
+                                            <div onClick={(e) => {
+                                                e.stopPropagation()
                                                 this.setTaskToComplete(task)
-                                            }} className='check-box' checked={false} color='primary'/>
+                                            }} className="outer">
+                                                <div className="inner-unchecked"></div>
+                                            </div>
                                             <IonLabel color='secondary' className='ion-text-wrap ion-margin-start'>
                                                 {task.name}
                                             </IonLabel>
@@ -378,9 +383,14 @@ class Tasks extends React.Component<any, IState> {
                                 }} options={options}>
                                     <div>
                                         <IonItem button key={task.id + Math.random()}>
-                                            <IonCheckbox onIonChange={() => {
+                                            <div onClick={() => {
                                                 this.setTaskToToDo(task)
-                                            }} className='check-box' checked={true} color='primary'/>
+                                            }} className="outer">
+                                                <div className="inner-checked">
+                                                    <FontAwesomeIcon icon={faCheck} size="xs"
+                                                                     className="icon-style" color="white"
+                                                    /></div>
+                                            </div>
                                             <IonLabel color='secondary' className='ion-text-wrap ion-margin-start'>
                                                 <del>{task.name}</del>
                                             </IonLabel>
