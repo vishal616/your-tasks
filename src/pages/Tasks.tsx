@@ -17,7 +17,7 @@ import {
     text,
     trash
 } from "ionicons/icons";
-import {Plugins, KeyboardInfo} from '@capacitor/core';
+import {Plugins,HapticsImpactStyle} from '@capacitor/core';
 import {LongPressModule} from "ionic-long-press";
 import '@sandstreamdev/react-swipeable-list/dist/styles.css';
 import Collapsible from 'react-collapsible';
@@ -25,6 +25,7 @@ const Hammer = require("react-hammerjs").default;
 
 const {Keyboard} = Plugins;
 const {Storage} = Plugins;
+const {Haptics} = Plugins;
 
 export interface IState {
     showModal: any;
@@ -60,9 +61,11 @@ class Tasks extends React.Component<any, IState> {
             }
         }
     };
-
+    public subscribe:any;
+    public input:any;
     constructor(props: any) {
         super(props);
+        Keyboard.setScroll({isDisabled:true});
         this.state = {
             toDoCollapse:true,
             completedCollapse:false,
@@ -92,7 +95,6 @@ class Tasks extends React.Component<any, IState> {
         const self = this;
         let todoList: any = [];
         let completedList: any = [];
-        Keyboard.setScroll({isDisabled:true})
         async function getData() {
             todoList = await Storage.get({key: 'ToDoList'});
             completedList = await Storage.get({key: 'CompletedList'});
@@ -263,7 +265,6 @@ class Tasks extends React.Component<any, IState> {
     }
 
     public updateToDoTask = (task: any, listType: any) => {
-        Keyboard.show();
         this.setState({
             newTask: task,
             showModal: true,
@@ -327,7 +328,7 @@ class Tasks extends React.Component<any, IState> {
             <IonPage>
                 <IonHeader>
                     <IonToolbar className='ion-text-center toolbar-height'>
-                        <IonLabel color="primary"><h1>Your Tasks</h1></IonLabel>
+                        <IonLabel color="primary"><h1 style={{fontSize:'30px'}}>Your Tasks</h1></IonLabel>
                     </IonToolbar>
                 </IonHeader>
 
@@ -340,7 +341,8 @@ class Tasks extends React.Component<any, IState> {
                     <IonList>
                         {this.state.toDoList.map((task: any) => {
                             return (
-                                <Hammer  onPressUp={() => {
+                                <Hammer onPressUp={() => {
+                                    Haptics.impact({style:HapticsImpactStyle.Light});
                                     this.setState({showAlert: true, deleteTasK: task, deleteTypeList: 'ToDo'})
                                 }} options={options}>
                                     <div>
@@ -371,6 +373,7 @@ class Tasks extends React.Component<any, IState> {
                         {this.state.completedList.map((task: any) => {
                             return (
                                 <Hammer onPressUp={() => {
+                                    Haptics.impact({style:HapticsImpactStyle.Light});
                                     this.setState({showAlert: true, deleteTasK: task, deleteTypeList: 'Completed'})
                                 }} options={options}>
                                     <div>
@@ -391,13 +394,13 @@ class Tasks extends React.Component<any, IState> {
                     </Collapsible>
                 </IonContent>
                 <IonModal onDidDismiss={() => {
-                    this.setState({showModal: false, newTask: {}, placeholder: "New Task", formMode: 'create'})
+                    this.setState({showModal: false, newTask: {}, placeholder: "New Task", formMode: 'create'});
                 }} cssClass='input-modal' isOpen={this.state.showModal}>
                     <IonContent>
                         <div className='flex-box'>
-                            <IonTextarea value={this.state.newTask.name} onIonChange={this.handleInputChange}
+                            <IonTextarea autofocus inputMode="text" value={this.state.newTask.name} onIonChange={this.handleInputChange}
                                          placeholder={this.state.placeholder} autoGrow={true}
-                                         class='input-value'></IonTextarea>
+                                         class='input-value' onIonFocus={()=>{}} ></IonTextarea>
                             <div style={{
                                 display: 'flex',
                                 flexDirection: 'row',
@@ -416,7 +419,6 @@ class Tasks extends React.Component<any, IState> {
                 <IonFab className="fab-bottom-margin" vertical="bottom" horizontal="end" slot="fixed">
                     <IonFabButton className='fab-color' onClick={() => {
                         this.setState({showModal: true});
-                        Keyboard.show()
                     }}>
                         <IonIcon icon={add}></IonIcon>
                     </IonFabButton>

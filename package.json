@@ -6,7 +6,7 @@
     "@capacitor/android": "^2.0.1",
     "@capacitor/core": "2.0.1",
     "@fortawesome/fontawesome-free": "^5.13.0",
-    "@ionic-native/vibration": "^5.25.0",
+    "@ionic-native/vibration": "^5.26.0",
     "@ionic/react": "^5.0.7",
     "@ionic/react-router": "^5.0.7",
     "@sandstreamdev/react-swipeable-list": "github:sandstreamdev/react-swipeable-list",
