@@ -27,6 +27,12 @@ const Hammer = require("react-hammerjs").default;
 const {Keyboard} = Plugins;
 const {Storage} = Plugins;
 const {Haptics} = Plugins;
+let allowExit:boolean = true;
+Plugins.App.addListener('backButton', e => {
+    if(allowExit) {
+        Plugins.App.exitApp();
+    }
+})
 
 export interface IState {
     showModal: any;
@@ -267,6 +273,7 @@ class Tasks extends React.Component<any, IState> {
     }
 
     public updateToDoTask = (task: any, listType: any) => {
+        allowExit=false;
         this.setState({
             newTask: task,
             showModal: true,
@@ -345,6 +352,7 @@ class Tasks extends React.Component<any, IState> {
                         {this.state.toDoList.map((task: any) => {
                             return (
                                 <Hammer onPressUp={() => {
+                                    allowExit=false;
                                     Haptics.impact({style:HapticsImpactStyle.Light});
                                     this.setState({showAlert: true, deleteTasK: task, deleteTypeList: 'ToDo'})
                                 }} options={options}>
@@ -385,6 +393,7 @@ class Tasks extends React.Component<any, IState> {
                         {this.state.completedList.map((task: any) => {
                             return (
                                 <Hammer onPressUp={() => {
+                                    allowExit=false;
                                     Haptics.impact({style:HapticsImpactStyle.Light});
                                     this.setState({showAlert: true, deleteTasK: task, deleteTypeList: 'Completed'})
                                 }} options={options}>
@@ -412,6 +421,7 @@ class Tasks extends React.Component<any, IState> {
                 </IonContent>
                 <IonModal onDidDismiss={() => {
                     this.setState({showModal: false, newTask: {}, placeholder: "New Task", formMode: 'create'});
+                    allowExit=true;
                 }} cssClass='input-modal' isOpen={this.state.showModal}>
                     <IonContent>
                         <div className='flex-box'>
@@ -436,6 +446,7 @@ class Tasks extends React.Component<any, IState> {
                 <IonFab className="fab-bottom-margin" vertical="bottom" horizontal="end" slot="fixed">
                     <IonFabButton className='fab-color' onClick={() => {
                         this.setState({showModal: true});
+                        allowExit=false;
                     }}>
                         <IonIcon icon={add}></IonIcon>
                     </IonFabButton>
@@ -450,7 +461,8 @@ class Tasks extends React.Component<any, IState> {
                 </IonFooter>
                 <IonAlert
                     isOpen={this.state.showAlert}
-                    onDidDismiss={() => this.setState({showAlert: false})}
+                    onDidDismiss={() => {this.setState({showAlert: false})
+                    allowExit=true}}
                     header={'Delete'}
                     message={'<h3>Are You Sure ?</h3>'}
                     buttons={[
