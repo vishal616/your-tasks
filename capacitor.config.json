@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "your-tasks",
+  "appId": "com.yourtaks.dev",
+  "appName": "YourTasks",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
@@ -9,9 +9,5 @@
     "WebView": {
       "scrollEnabled": false
     }
-  },
-  "server": {
-    "url": "http://192.168.0.118:8100",
-    "cleartext": true
   }
 }
